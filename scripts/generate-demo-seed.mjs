@@ -285,6 +285,15 @@ where p.storage_zone = k.storage_zone;
 
 drop schema demo_seed cascade;
 
+-- Recalcula la matriz ABC-XYZ si ya existe (migración 0004 en adelante)
+do $$
+begin
+  if to_regprocedure('public.refresh_product_classifications()') is not null then
+    perform public.refresh_product_classifications();
+  end if;
+end;
+$$;
+
 commit;
 `
 

@@ -1,14 +1,18 @@
 import { useState } from 'react'
 import { RefreshCw } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 import { useAbcXyz } from '../hooks/useAbcXyz'
 import { ABC_INFO } from '../lib/abcXyz'
-import { formatNumber, formatPercent } from '../lib/format'
+import { formatDateTime, formatNumber, formatPercent } from '../lib/format'
 import MatrixGrid from '../components/MatrixGrid'
 import CellDetail from '../components/CellDetail'
 import StateMessage from '../components/StateMessage'
 
 function MatrixPage() {
-  const { summary, loading, error, reload } = useAbcXyz()
+  const { summary, computedAt, loading, recomputing, error, reload, recompute } = useAbcXyz()
+  const { profile } = useAuth()
+  const canRecompute = ['admin', 'compras'].includes(profile?.role)
+  const busy = loading || recomputing
   const [selectedKey, setSelectedKey] = useState('AX')
 
   return (
@@ -20,16 +24,22 @@ function MatrixPage() {
           <p className="mt-2 max-w-2xl text-sm text-graphite-500">
             Cada producto se ordena por cuánto deja y por cuán predecible es su venta. Cada celda tiene su regla de compra.
           </p>
+          {computedAt && (
+            <p className="mt-2 font-mono text-xs text-graphite-500">Calculada el {formatDateTime(computedAt)}</p>
+          )}
         </div>
-        <button
-          type="button"
-          onClick={reload}
-          disabled={loading}
-          className="inline-flex items-center gap-2 self-start rounded-md border border-concrete-300 bg-white px-4 py-2 text-sm font-medium transition-colors hover:border-graphite-900 disabled:cursor-not-allowed disabled:opacity-60 sm:self-auto"
-        >
-          <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
-          Recalcular
-        </button>
+        {canRecompute && (
+          <button
+            type="button"
+            onClick={recompute}
+            disabled={busy}
+            title="Vuelve a clasificar todos los productos con las ventas más recientes"
+            className="inline-flex items-center gap-2 self-start rounded-md border border-concrete-300 bg-white px-4 py-2 text-sm font-medium transition-colors hover:border-graphite-900 disabled:cursor-not-allowed disabled:opacity-60 sm:self-auto"
+          >
+            <RefreshCw className={`h-4 w-4 ${recomputing ? 'animate-spin' : ''}`} aria-hidden="true" />
+            {recomputing ? 'Recalculando…' : 'Recalcular matriz'}
+          </button>
+        )}
       </header>
 
       {loading && !summary && (
@@ -55,8 +65,12 @@ function MatrixPage() {
         <section className="rounded-lg border border-concrete-300 bg-white">
           <StateMessage
             variant="empty"
-            title="Aún no hay ventas para clasificar"
-            description="La matriz se calcula con el margen de los últimos 12 meses y la venta semanal de las últimas 52 semanas."
+            title="La matriz aún no está calculada"
+            description={
+              canRecompute
+                ? 'Presiona "Recalcular matriz" para clasificar los productos con el margen de los últimos 12 meses y la venta de las últimas 52 semanas.'
+                : 'Pídele a compras o al administrador que calcule la matriz.'
+            }
           />
         </section>
       )}

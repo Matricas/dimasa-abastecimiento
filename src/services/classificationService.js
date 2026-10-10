@@ -15,3 +15,9 @@ export async function fetchPolicies() {
   if (error) throw error
   return data
 }
+
+export async function refreshClassifications() {
+  const { data, error } = await supabase.rpc('refresh_product_classifications')
+  if (error) throw error
+  return data
+}

@@ -16,3 +16,5 @@ export const formatShortCLP = (value) => {
   if (Math.abs(v) >= 1e3) return `$${integer.format(v / 1e3)} mil`
   return clp.format(v)
 }
+const dateTime = new Intl.DateTimeFormat('es-CL', { dateStyle: 'long', timeStyle: 'short', timeZone: 'America/Santiago' })
+export const formatDateTime = (iso) => (iso ? dateTime.format(new Date(iso)) : '—')
