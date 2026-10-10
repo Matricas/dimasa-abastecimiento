@@ -1,5 +1,6 @@
 -- 0001 · Base de inventario: perfiles con rol, zonas, proveedores, productos, ventas y stock.
 -- Herramienta interna de una sola empresa: el acceso se controla por rol (admin, compras, gerencia).
+-- Usuarios nuevos quedan en 'pendiente' (sin acceso) hasta que un admin les asigna rol.
 
 -- ─── Perfiles y roles ────────────────────────────────────────────────────────
 
@@ -7,7 +8,7 @@ create table public.profiles (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null unique references auth.users (id) on delete cascade,
   full_name text,
-  role text not null default 'gerencia' check (role in ('admin', 'compras', 'gerencia')),
+  role text not null default 'pendiente' check (role in ('pendiente', 'admin', 'compras', 'gerencia')),
   created_at timestamptz not null default now()
 );
 alter table public.profiles enable row level security;
@@ -25,7 +26,7 @@ $$;
 revoke execute on function public.current_user_role() from public, anon;
 grant execute on function public.current_user_role() to authenticated;
 
--- Crea el perfil (rol gerencia, solo lectura) al registrar un usuario.
+-- Crea el perfil (rol pendiente, sin acceso) al registrar un usuario.
 create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
@@ -132,7 +133,7 @@ alter table public.inventory_snapshots enable row level security;
 create index inventory_snapshots_product_idx on public.inventory_snapshots (product_id);
 
 -- ─── Políticas de datos de negocio ───────────────────────────────────────────
--- Lectura: cualquier usuario con perfil. Escritura: admin y compras. Borrado: solo admin.
+-- Lectura: admin, compras y gerencia (pendiente no ve nada). Escritura: admin y compras. Borrado: solo admin.
 
 do $$
 declare
@@ -141,7 +142,7 @@ begin
   foreach t in array array['storage_zones', 'suppliers', 'products', 'sales', 'inventory_snapshots'] loop
     execute format(
       'create policy "%1$s: lectura para usuarios con rol" on public.%1$I for select to authenticated
-         using ((select public.current_user_role()) is not null)', t);
+         using ((select public.current_user_role()) in (''admin'', ''compras'', ''gerencia''))', t);
     execute format(
       'create policy "%1$s: compras y admin insertan" on public.%1$I for insert to authenticated
          with check ((select public.current_user_role()) in (''admin'', ''compras''))', t);
