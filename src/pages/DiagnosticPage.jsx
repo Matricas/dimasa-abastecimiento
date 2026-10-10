@@ -42,6 +42,7 @@ function DiagnosticPage() {
             variant="error"
             title="No pudimos cargar el diagnóstico"
             description="La conexión con la base de datos falló. Si el problema sigue, avisa al administrador."
+            detail={[error.code, error.message].filter(Boolean).join(' · ')}
             onRetry={reload}
           />
         </section>

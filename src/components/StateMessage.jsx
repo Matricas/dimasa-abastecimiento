@@ -6,7 +6,7 @@ const VARIANTS = {
   empty: { Icon: Inbox, iconClass: 'text-graphite-400' },
 }
 
-function StateMessage({ variant, title, description, onRetry, retryLabel = 'Reintentar' }) {
+function StateMessage({ variant, title, description, detail, onRetry, retryLabel = 'Reintentar' }) {
   const { Icon, iconClass } = VARIANTS[variant]
   return (
     <div
@@ -16,6 +16,7 @@ function StateMessage({ variant, title, description, onRetry, retryLabel = 'Rein
       <Icon className={`h-8 w-8 ${iconClass}`} aria-hidden="true" />
       <p className="text-base font-semibold text-graphite-900">{title}</p>
       {description && <p className="max-w-md text-sm text-graphite-500">{description}</p>}
+      {detail && <p className="max-w-md break-words font-mono text-xs text-graphite-400">Detalle técnico: {detail}</p>}
       {onRetry && (
         <button
           type="button"
