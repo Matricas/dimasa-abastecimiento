@@ -51,6 +51,13 @@ export async function createDb({ upTo = Infinity, beforeMigration } = {}) {
   return db
 }
 
+// Aplica una migración puntual por número (para comparar antes y después).
+export async function applyMigration(db, number) {
+  const file = migrationFiles().find((f) => Number(f.slice(0, 4)) === number)
+  if (!file) throw new Error(`No existe la migración ${number}`)
+  await db.exec(readFileSync(join(MIGRATIONS_DIR, file), 'utf8'))
+}
+
 // Crea un usuario en auth.users (el trigger le crea el perfil 'pendiente') y le asigna el rol.
 export async function createUser(db, { email, role = 'pendiente', fullName = null }) {
   const { rows } = await db.query(

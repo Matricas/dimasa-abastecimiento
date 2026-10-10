@@ -10,6 +10,8 @@ let users
 beforeAll(async () => {
   db = await createDb()
   await loadFixtures(db)
+  // Desde 0010 el diagnóstico se guarda: hay que recalcularlo después de cargar datos
+  await db.query('select public.refresh_stock_status()')
   users = {
     admin: await createUser(db, { email: 'admin@dimasa.test', role: 'admin' }),
     compras: await createUser(db, { email: 'compras@dimasa.test', role: 'compras' }),
