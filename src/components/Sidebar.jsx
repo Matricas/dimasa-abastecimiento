@@ -6,7 +6,7 @@ import BrandMark from './BrandMark'
 
 const NAV_ITEMS = [
   { to: '/diagnostico', label: 'Diagnóstico', Icon: Gauge },
-  { label: 'Matriz ABC-XYZ', Icon: Grid3x3 },
+  { to: '/matriz', label: 'Matriz ABC-XYZ', Icon: Grid3x3 },
   { label: 'Propuesta de compra', Icon: ClipboardList },
   { label: 'Alertas', Icon: BellRing },
   { label: 'Datos', Icon: Database },

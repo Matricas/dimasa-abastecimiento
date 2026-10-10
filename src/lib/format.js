@@ -8,3 +8,11 @@ export const formatMillions = (value) => `$${integer.format(Math.round((value ??
 export const formatNumber = (value) => integer.format(value ?? 0)
 export const formatPercent = (ratio) => `${oneDecimal.format((ratio ?? 0) * 100)}%`
 export const formatDate = (isoDate) => (isoDate ? longDate.format(new Date(isoDate)) : '—')
+const twoDecimals = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+export const formatDecimal = (value) => (value === null || value === undefined ? '—' : twoDecimals.format(value))
+export const formatShortCLP = (value) => {
+  const v = value ?? 0
+  if (Math.abs(v) >= 1e6) return `$${oneDecimal.format(v / 1e6)} M`
+  if (Math.abs(v) >= 1e3) return `$${integer.format(v / 1e3)} mil`
+  return clp.format(v)
+}
