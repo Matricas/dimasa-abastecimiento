@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@electric-sql/pglite": "^0.3.16",
     "@supabase/supabase-js": "^2.117.3",
     "dompurify": "^3.4.16",
     "lucide-react": "^1.55.0",
@@ -32,5 +33,18 @@
     "@small-tech/vite-plugin-sri": {
       "cheerio": "1.0.0-rc.12"
     }
-  }
+  },
+  "description": "Herramienta interna para decidir qué, cuánto y cuándo comprar: diagnóstico de inventario, matriz ABC-XYZ, forecast de demanda y propuesta de compra semanal.",
+  "main": "postcss.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Matricas/dimasa-abastecimiento.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Matricas/dimasa-abastecimiento/issues"
+  },
+  "homepage": "https://github.com/Matricas/dimasa-abastecimiento#readme"
 }
