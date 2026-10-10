@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { BellRing, ClipboardList, Database, Gauge, Grid3x3, LogOut, TrendingUp } from 'lucide-react'
+import { BellRing, ClipboardList, Database, Gauge, Grid3x3, LogOut, TrendingUp, Users } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { signOut } from '../services/authService'
 import BrandMark from './BrandMark'
@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { to: '/compras', label: 'Propuesta de compra', Icon: ClipboardList },
   { label: 'Alertas', Icon: BellRing },
   { label: 'Datos', Icon: Database },
+  { to: '/usuarios', label: 'Usuarios', Icon: Users, roles: ['admin'] },
 ]
 
 const ROLE_LABELS = { admin: 'Administrador', compras: 'Compras', gerencia: 'Gerencia' }
@@ -27,7 +28,7 @@ function Sidebar({ onNavigate }) {
       </div>
 
       <nav aria-label="Módulos" className="flex-1 space-y-1 px-3">
-        {NAV_ITEMS.map(({ to, label, Icon }) =>
+        {NAV_ITEMS.filter((item) => !item.roles || item.roles.includes(profile?.role)).map(({ to, label, Icon }) =>
           to ? (
             <NavLink
               key={label}
