@@ -4,7 +4,7 @@ Herramienta web interna para que Dimasa decida **qué, cuánto y cuándo comprar
 
 - **Producción:** https://dimasa-abastecimiento-j4vx.vercel.app
 - **Código:** https://github.com/Matricas/dimasa-abastecimiento
-- **Estado:** Fase 1 (Diagnóstico) lista. Funciona con datos de prueba mientras llegan las exportaciones reales de Random ERP.
+- **Estado:** Fase 1 (Diagnóstico) y Fase 2 (Matriz ABC-XYZ) listas. Funciona con datos de prueba mientras llegan las exportaciones reales de Random ERP.
 
 ---
 
@@ -51,6 +51,19 @@ Además incluye:
 
 Cada número se puede explicar en una frase. Es a propósito: compras tiene que poder confiar en la herramienta.
 
+### Pantalla de Matriz ABC-XYZ
+Clasifica cada producto según dos criterios:
+- **Cuánto deja (ABC):** A son los productos que suman el 80% del margen de los últimos 12 meses, B el siguiente 15% y C el resto.
+- **Cuán predecible es su venta (XYZ):** X es venta estable, Y variable y Z errática, según cuánto varía la venta semanal en 52 semanas.
+
+Cada una de las 9 combinaciones tiene su **regla de compra**: un nivel de servicio (por ejemplo, 98% para A-X, que nunca puede faltar) y una frecuencia de revisión (semanal, quincenal o mensual). C-Z se compra bajo pedido o se liquida.
+
+Al elegir una celda se ven sus productos con margen, venta semanal, variación, **estacionalidad** (de 0 a 1, con el mes peak), stock y estado.
+
+Con los datos de prueba, 61 productos A (el 24% del catálogo) generan el 80% del margen.
+
+La matriz queda guardada y la pantalla muestra cuándo se calculó. Compras o el administrador la recalculan con un botón cuando llegan datos nuevos.
+
 ## Datos de prueba
 
 Mientras no llegue la exportación de Random ERP, la base trae datos simulados realistas:
@@ -70,7 +83,6 @@ Cuando lleguen los datos reales, reemplazan a los de prueba sin cambiar las pant
 
 | Fase | Módulo | Qué entrega |
 | --- | --- | --- |
-| 2 | Matriz ABC-XYZ | Clasifica cada producto por cuánto deja (A, B, C) y cuán predecible es su venta (X, Y, Z), con su peso de estacionalidad y su regla de compra |
 | 3 | Forecast de demanda | Proyección de venta por producto y canal, con escenario bajo, medio y alto; se compara contra el método actual y, si no le gana, no se usa |
 | 4 | Propuesta de compra | Cada lunes: qué comprar, cuánto, a qué proveedor y dónde guardarlo, con la razón de cada línea. Compras aprueba, ajusta o rechaza, y exporta a Excel |
 | 5 | Alertas | Avisa antes de un quiebre en productos clave, cuando algo lleva demasiado tiempo parado o cuando la bodega se llena |
