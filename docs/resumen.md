@@ -4,7 +4,7 @@ Herramienta web interna para que Dimasa decida **qué, cuánto y cuándo comprar
 
 - **Producción:** https://dimasa-abastecimiento-j4vx.vercel.app
 - **Código:** https://github.com/Matricas/dimasa-abastecimiento
-- **Estado:** Fase 1 (Diagnóstico) y Fase 2 (Matriz ABC-XYZ) listas. Funciona con datos de prueba mientras llegan las exportaciones reales de Random ERP.
+- **Estado:** Fase 1 (Diagnóstico), Fase 2 (Matriz ABC-XYZ) y Fase 3 (Forecast) en producción. Fase 4 (Propuesta de compra) en revisión. Funciona con datos de prueba mientras llegan las exportaciones reales de Random ERP.
 
 ---
 
@@ -64,6 +64,37 @@ Con los datos de prueba, 61 productos A (el 24% del catálogo) generan el 80% de
 
 La matriz queda guardada y la pantalla muestra cuándo se calculó. Compras o el administrador la recalculan con un botón cuando llegan datos nuevos.
 
+### Pantalla de Forecast de demanda
+Proyecta cuánto se va a vender de cada producto, semana a semana: 12 semanas para los nacionales y 17 (unos 4 meses) para los importados, que se piden con más anticipación.
+
+- **Cómo proyecta:** toma el promedio de las últimas 12 semanas, donde las recientes pesan más, y lo ajusta por temporada. Para la temporada mezcla el patrón del producto con el de su categoría, así no copia ruido. Los productos de venta esporádica usan un promedio simple de 26 semanas.
+- **Rango:** cada semana tiene un escenario bajo y uno alto. La venta real debería caer dentro del rango unas 8 de cada 10 semanas.
+- **Prueba honesta:** se proyectaron las últimas 12 semanas como si fuera hace 12 semanas y se compararon con lo que de verdad se vendió:
+
+| Método | Error semanal (WAPE) |
+| --- | --- |
+| **Forecast** | **44,6%** |
+| "Lo mismo que el año pasado" (el método actual) | 57,0% |
+| Promedio de las 4 semanas previas | 48,5% |
+
+  El forecast le gana en las tres clases. En los productos A, los más importantes, el error es 37% contra 47%. La pantalla también muestra el **sesgo**: hoy proyecta un 11% menos de lo que se vende, y lo avisa como riesgo de quiebre.
+
+- **Gráfico por producto:** 52 semanas de venta real, más la proyección con su rango y la línea de "hoy". Al pasar el mouse se ven los valores de cada semana.
+
+### Pantalla de Propuesta de compra
+Cada semana responde qué comprar, cuánto, a quién y dónde guardarlo.
+
+- **Cuánto pedir:** la venta proyectada durante el plazo de reposición más el período de revisión, más un stock de seguridad según la celda ABC-XYZ, menos el stock y lo que ya viene en camino. Se redondea al lote y al mínimo del proveedor.
+- **Por qué:** cada línea explica su cantidad en 5 pasos, para que compras pueda confiar en ella o corregirla.
+- **Agrupada por proveedor:** cada grupo es una orden de compra lista, con origen y fecha estimada de llegada.
+- **Cuida el espacio:** muestra los m² que ocupará lo pedido frente a los libres en bodega y patio. Si no cabe, se posterga primero lo C y después lo B; lo A nunca.
+- **C-Z:** no se repone; se compra bajo pedido.
+- **Compras decide:** aprueba, ajusta o rechaza cada línea. Ajustar o rechazar exige un motivo, y queda registrado quién y cuándo. Al aprobar la propuesta, lo pedido pasa a "en camino" y la siguiente propuesta lo descuenta.
+- **Exporta a Excel**, con una orden por proveedor.
+- **Gerencia** ve todo, pero no puede modificar nada.
+
+Con los datos de prueba, la primera propuesta tiene 75 productos por $62 M: $46 M nacional y $16 M importado.
+
 ## Datos de prueba
 
 Mientras no llegue la exportación de Random ERP, la base trae datos simulados realistas:
@@ -71,6 +102,7 @@ Mientras no llegue la exportación de Random ERP, la base trae datos simulados r
 - 13 proveedores: 10 nacionales (3 a 5 días de reposición) y 3 importados (45 a 60 días).
 - 2 años de ventas (más de 118 mil registros diarios), separadas en minorista (boletas) y empresas (facturas), con estacionalidad: más ventas en verano y menos en invierno.
 - Comportamiento tipo 80/20: el 20% de los productos explica el 76% de la venta.
+- Algunos pedidos ya "en camino" (cerca del 12% de los productos A y B), para que la propuesta de compra los descuente.
 
 Cuando lleguen los datos reales, reemplazan a los de prueba sin cambiar las pantallas.
 
@@ -83,8 +115,6 @@ Cuando lleguen los datos reales, reemplazan a los de prueba sin cambiar las pant
 
 | Fase | Módulo | Qué entrega |
 | --- | --- | --- |
-| 3 | Forecast de demanda | Proyección de venta por producto y canal, con escenario bajo, medio y alto; se compara contra el método actual y, si no le gana, no se usa |
-| 4 | Propuesta de compra | Cada lunes: qué comprar, cuánto, a qué proveedor y dónde guardarlo, con la razón de cada línea. Compras aprueba, ajusta o rechaza, y exporta a Excel |
 | 5 | Alertas | Avisa antes de un quiebre en productos clave, cuando algo lleva demasiado tiempo parado o cuando la bodega se llena |
 | — | Carga de datos | Subir las exportaciones de Random ERP y el Excel de inventario desde la misma herramienta |
 

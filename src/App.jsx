@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage'
 import DiagnosticPage from './pages/DiagnosticPage'
 import MatrixPage from './pages/MatrixPage'
 import ForecastPage from './pages/ForecastPage'
+import PurchasePage from './pages/PurchasePage'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/diagnostico" element={<DiagnosticPage />} />
           <Route path="/matriz" element={<MatrixPage />} />
           <Route path="/forecast" element={<ForecastPage />} />
+          <Route path="/compras" element={<PurchasePage />} />
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/diagnostico" replace />} />

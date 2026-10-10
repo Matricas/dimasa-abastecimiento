@@ -8,7 +8,7 @@ const NAV_ITEMS = [
   { to: '/diagnostico', label: 'Diagnóstico', Icon: Gauge },
   { to: '/matriz', label: 'Matriz ABC-XYZ', Icon: Grid3x3 },
   { to: '/forecast', label: 'Forecast de demanda', Icon: TrendingUp },
-  { label: 'Propuesta de compra', Icon: ClipboardList },
+  { to: '/compras', label: 'Propuesta de compra', Icon: ClipboardList },
   { label: 'Alertas', Icon: BellRing },
   { label: 'Datos', Icon: Database },
 ]

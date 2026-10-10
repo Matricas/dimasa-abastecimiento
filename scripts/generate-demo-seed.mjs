@@ -285,14 +285,38 @@ where p.storage_zone = k.storage_zone;
 
 drop schema demo_seed cascade;
 
--- Recalcula la matriz ABC-XYZ (0004) y el forecast (0005) si ya existen
+-- Recalcula matriz (0004), forecast (0005) y propuesta de compra (0006) si ya existen
 do $$
 begin
+  -- Pedidos en camino de prueba (~12% de los productos A y B)
+  if to_regclass('public.purchase_proposals') is not null then
+    delete from public.purchase_proposals where true;
+    insert into public.incoming_orders (product_id, quantity, ordered_at, expected_date)
+    select x.id, ceil(x.avg_daily * 7 * (2 + 4 * random())), date '2026-10-09' - 3,
+      date '2026-10-09' + 1 + floor(random() * x.lead_time_days)::int
+    from (
+      select pr.id, s.lead_time_days, sum(sa.quantity) / 90.0 as avg_daily, random() as u
+      from public.products pr
+      join public.suppliers s on s.id = pr.supplier_id
+      join public.sales sa on sa.product_id = pr.id and sa.sale_date > date '2026-10-09' - 90
+      join (
+        select p2.id, percent_rank() over (order by sum(s2.net_amount - s2.cost_amount) desc) < 0.5 as top_half
+        from public.products p2 join public.sales s2 on s2.product_id = p2.id
+        group by p2.id
+      ) r on r.id = pr.id and r.top_half
+      group by pr.id, s.lead_time_days
+    ) x
+    where x.u < 0.12 and x.avg_daily > 0;
+  end if;
+
   if to_regprocedure('public.refresh_product_classifications()') is not null then
     perform public.refresh_product_classifications();
   end if;
   if to_regprocedure('public.refresh_forecasts()') is not null then
     perform public.refresh_forecasts();
+  end if;
+  if to_regprocedure('public.generate_purchase_proposal()') is not null then
+    perform public.generate_purchase_proposal();
   end if;
 end;
 $$;
