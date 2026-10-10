@@ -186,13 +186,16 @@ ${suppliers.map(([n, o, l]) => `  (${q(n)}, ${q(o)}, ${l})`).join(',\n')};
 insert into public.products (sku, name, category, unit, supplier_id, storage_zone, weather_resistant, m2_per_unit, unit_cost, unit_price, min_order_qty, lot_size) values
 ${productRows.map((r) => `  ${r}`).join(',\n')};
 
--- Parámetros ocultos de demanda (solo para generar datos; no quedan en la base)
-create temp table demo_params (
+-- Parámetros ocultos de demanda, en un esquema aparte (no expuesto por la API) que se borra al final.
+-- No se usa tabla temporal porque el SQL Editor de Supabase confirma cada sentencia por separado.
+drop schema if exists demo_seed cascade;
+create schema demo_seed;
+create table demo_seed.demo_params (
   sku text, rate numeric, volatility text, emp_share numeric, season_amp numeric, peak_month int,
   dead_days_ago int, launch_days_ago int
-) on commit drop;
+);
 
-insert into demo_params values
+insert into demo_seed.demo_params values
 ${paramRows.map((r) => `  ${r}`).join(',\n')};
 
 select setseed(0.1010);
@@ -200,7 +203,7 @@ select setseed(0.1010);
 -- Ventas minoristas (boletas): demanda diaria con estacionalidad, día de semana, tendencia y ruido según volatilidad
 insert into public.sales (sale_date, product_id, channel, quantity, net_amount, cost_amount)
 select g.d, p.id, 'minorista', g.qty, g.qty * p.unit_price, g.qty * p.unit_cost
-from demo_params dp
+from demo_seed.demo_params dp
 join public.products p on p.sku = dp.sku
 cross join lateral (
   select d::date as d,
@@ -226,7 +229,7 @@ where g.qty > 0;
 -- Ventas a empresas (facturas): pedidos esporádicos y más grandes, solo días hábiles
 insert into public.sales (sale_date, product_id, channel, quantity, net_amount, cost_amount)
 select g.d, p.id, 'empresas', g.qty, g.qty * p.unit_price * 0.95, g.qty * p.unit_cost
-from demo_params dp
+from demo_seed.demo_params dp
 join public.products p on p.sku = dp.sku
 cross join lateral (
   select d::date as d,
@@ -253,7 +256,7 @@ select date '2026-10-09', p.id,
     when p.u < 0.62 then ceil(d90.avg_daily * case when p.origin = 'importado' then 40 + 70 * random() else 15 + 40 * random() end)
     else ceil(d90.avg_daily * case when p.origin = 'importado' then 135 + 140 * random() else 70 + 120 * random() end)
   end
-from demo_params dp
+from demo_seed.demo_params dp
 join (
   select pr.id, pr.sku, s.origin, random() as u
   from public.products pr
@@ -278,6 +281,8 @@ from (
   group by pr.storage_zone, z.capacity_m2
 ) k
 where p.storage_zone = k.storage_zone;
+
+drop schema demo_seed cascade;
 
 commit;
 `
