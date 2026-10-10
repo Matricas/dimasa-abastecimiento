@@ -194,6 +194,7 @@ create table demo_seed.demo_params (
   sku text, rate numeric, volatility text, emp_share numeric, season_amp numeric, peak_month int,
   dead_days_ago int, launch_days_ago int
 );
+alter table demo_seed.demo_params enable row level security;
 
 insert into demo_seed.demo_params values
 ${paramRows.map((r) => `  ${r}`).join(',\n')};
