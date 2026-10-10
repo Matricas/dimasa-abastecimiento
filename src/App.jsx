@@ -1,8 +1,20 @@
+import { Navigate, Route, Routes } from 'react-router-dom'
+import ProtectedRoute from './components/ProtectedRoute'
+import AppLayout from './components/AppLayout'
+import LoginPage from './pages/LoginPage'
+import DiagnosticPage from './pages/DiagnosticPage'
+
 function App() {
   return (
-    <main className="min-h-screen flex items-center justify-center p-8">
-      <h1 className="text-2xl font-semibold">Dimasa · Abastecimiento</h1>
-    </main>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route element={<ProtectedRoute />}>
+        <Route element={<AppLayout />}>
+          <Route path="/diagnostico" element={<DiagnosticPage />} />
+        </Route>
+      </Route>
+      <Route path="*" element={<Navigate to="/diagnostico" replace />} />
+    </Routes>
   )
 }
 

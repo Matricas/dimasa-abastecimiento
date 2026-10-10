@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.3.16",
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
     "@supabase/supabase-js": "^2.117.3",
     "dompurify": "^3.4.16",
     "lucide-react": "^1.55.0",
@@ -19,7 +21,6 @@
     "react-router-dom": "^7.18.4"
   },
   "devDependencies": {
-    "@small-tech/vite-plugin-sri": "^1.0.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
@@ -28,11 +29,6 @@
     "postcss": "^8.5.29",
     "tailwindcss": "^3.4.19",
     "vite": "^8.3.0"
-  },
-  "overrides": {
-    "@small-tech/vite-plugin-sri": {
-      "cheerio": "1.0.0-rc.12"
-    }
   },
   "description": "Herramienta interna para decidir qué, cuánto y cuándo comprar: diagnóstico de inventario, matriz ABC-XYZ, forecast de demanda y propuesta de compra semanal.",
   "main": "postcss.config.js",
