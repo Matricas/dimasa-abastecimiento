@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { BellRing, ClipboardList, Database, Gauge, Grid3x3, LogOut } from 'lucide-react'
+import { BellRing, ClipboardList, Database, Gauge, Grid3x3, LogOut, TrendingUp } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { signOut } from '../services/authService'
 import BrandMark from './BrandMark'
@@ -7,6 +7,7 @@ import BrandMark from './BrandMark'
 const NAV_ITEMS = [
   { to: '/diagnostico', label: 'Diagnóstico', Icon: Gauge },
   { to: '/matriz', label: 'Matriz ABC-XYZ', Icon: Grid3x3 },
+  { to: '/forecast', label: 'Forecast de demanda', Icon: TrendingUp },
   { label: 'Propuesta de compra', Icon: ClipboardList },
   { label: 'Alertas', Icon: BellRing },
   { label: 'Datos', Icon: Database },

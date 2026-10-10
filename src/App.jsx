@@ -4,6 +4,7 @@ import AppLayout from './components/AppLayout'
 import LoginPage from './pages/LoginPage'
 import DiagnosticPage from './pages/DiagnosticPage'
 import MatrixPage from './pages/MatrixPage'
+import ForecastPage from './pages/ForecastPage'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route element={<AppLayout />}>
           <Route path="/diagnostico" element={<DiagnosticPage />} />
           <Route path="/matriz" element={<MatrixPage />} />
+          <Route path="/forecast" element={<ForecastPage />} />
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/diagnostico" replace />} />
