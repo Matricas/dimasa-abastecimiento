@@ -628,7 +628,7 @@ where p.storage_zone = k.storage_zone;
 
 drop schema demo_seed cascade;
 
--- Recalcula matriz (0004), forecast (0005) y propuesta de compra (0006) si ya existen
+-- Recalcula matriz (0004), forecast (0005), propuesta de compra (0006) y alertas (0008) si ya existen
 do $$
 begin
   -- Pedidos en camino de prueba (~12% de los productos A y B)
@@ -660,6 +660,9 @@ begin
   end if;
   if to_regprocedure('public.generate_purchase_proposal()') is not null then
     perform public.generate_purchase_proposal();
+  end if;
+  if to_regprocedure('public.refresh_alerts()') is not null then
+    perform public.refresh_alerts();
   end if;
 end;
 $$;

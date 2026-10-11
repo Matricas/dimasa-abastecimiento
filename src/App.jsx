@@ -6,6 +6,7 @@ import DiagnosticPage from './pages/DiagnosticPage'
 import MatrixPage from './pages/MatrixPage'
 import ForecastPage from './pages/ForecastPage'
 import PurchasePage from './pages/PurchasePage'
+import AlertsPage from './pages/AlertsPage'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/matriz" element={<MatrixPage />} />
           <Route path="/forecast" element={<ForecastPage />} />
           <Route path="/compras" element={<PurchasePage />} />
+          <Route path="/alertas" element={<AlertsPage />} />
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/diagnostico" replace />} />

@@ -3,13 +3,14 @@ import { BellRing, ClipboardList, Database, Gauge, Grid3x3, LogOut, TrendingUp }
 import { useAuth } from '../context/AuthContext'
 import { signOut } from '../services/authService'
 import BrandMark from './BrandMark'
+import { useUrgentAlertCount } from '../hooks/useUrgentAlertCount'
 
 const NAV_ITEMS = [
   { to: '/diagnostico', label: 'Diagnóstico', Icon: Gauge },
   { to: '/matriz', label: 'Matriz ABC-XYZ', Icon: Grid3x3 },
   { to: '/forecast', label: 'Forecast de demanda', Icon: TrendingUp },
   { to: '/compras', label: 'Propuesta de compra', Icon: ClipboardList },
-  { label: 'Alertas', Icon: BellRing },
+  { to: '/alertas', label: 'Alertas', Icon: BellRing, badge: true },
   { label: 'Datos', Icon: Database },
 ]
 
@@ -19,6 +20,7 @@ const itemClass = 'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-m
 
 function Sidebar({ onNavigate }) {
   const { user, profile } = useAuth()
+  const urgentAlerts = useUrgentAlertCount()
 
   return (
     <div className="flex h-full flex-col bg-graphite-900 text-concrete-200">
@@ -27,7 +29,7 @@ function Sidebar({ onNavigate }) {
       </div>
 
       <nav aria-label="Módulos" className="flex-1 space-y-1 px-3">
-        {NAV_ITEMS.map(({ to, label, Icon }) =>
+        {NAV_ITEMS.map(({ to, label, Icon, badge }) =>
           to ? (
             <NavLink
               key={label}
@@ -41,6 +43,11 @@ function Sidebar({ onNavigate }) {
             >
               <Icon className="h-4 w-4" aria-hidden="true" />
               {label}
+              {badge && urgentAlerts > 0 && (
+                <span className="ml-auto rounded-full bg-signal-400 px-2 py-0.5 font-mono text-xs font-semibold text-graphite-900" aria-label={`${urgentAlerts} alertas urgentes`}>
+                  {urgentAlerts}
+                </span>
+              )}
             </NavLink>
           ) : (
             <span key={label} aria-disabled="true" className={`${itemClass} cursor-not-allowed text-graphite-400`}>

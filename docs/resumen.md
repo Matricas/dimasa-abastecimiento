@@ -4,7 +4,7 @@ Herramienta web interna para que Dimasa decida **qué, cuánto y cuándo comprar
 
 - **Producción:** https://dimasa-abastecimiento-j4vx.vercel.app
 - **Código:** https://github.com/Matricas/dimasa-abastecimiento
-- **Estado:** Fases 1 a 4 en producción: Diagnóstico, Matriz ABC-XYZ, Forecast y Propuesta de compra. Funciona con datos de prueba mientras llegan las exportaciones reales de Random ERP.
+- **Estado:** Fases 1 a 4 en producción (Diagnóstico, Matriz ABC-XYZ, Forecast y Propuesta de compra). Fase 5 (Alertas) en revisión. Funciona con datos de prueba mientras llegan las exportaciones reales de Random ERP.
 
 ---
 
@@ -95,6 +95,22 @@ Cada semana responde qué comprar, cuánto, a quién y dónde guardarlo.
 
 Con los datos de prueba, la primera propuesta tiene 75 productos por $62 M: $46 M nacional y $16 M importado.
 
+### Pantalla de Alertas
+Muestra lo que requiere atención hoy, ordenado por gravedad y por plata en juego:
+
+| Alerta | Cuándo salta | Gravedad |
+| --- | --- | --- |
+| **Quiebre inminente** | El stock más lo que viene en camino no alcanza a cubrir la reposición y la revisión, al ritmo del forecast | Crítica si es clase A y se acaba antes de que llegue un pedido hecho hoy |
+| **Sobrestock** | Supera su cobertura objetivo con más de $1 M de exceso | Alta desde $5 M |
+| **Sin movimiento** | Sin ventas en 90 días o más | Alta desde $1 M parado |
+| **Bodega o patio llenos** | Ocupación de 85% o más, o la propuesta de compra no cabe | Crítica desde 95% |
+
+- Cada alerta explica el porqué con números ("Stock 102 + 0 en camino alcanzan para 1,6 días…") y sugiere una acción. Por ejemplo: si un importado no llega a tiempo, propone evaluar una compra puntual a un proveedor nacional.
+- Compras puede **marcar una alerta como revisada**, con una nota opcional. Queda registrado quién y cuándo, y se oculta por 14 días. Nadie puede registrar una revisión a nombre de otro.
+- El menú lateral muestra cuántas alertas **críticas y altas** siguen sin revisar.
+
+Con los datos de prueba hay 2 críticas, 28 altas y 56 medias.
+
 ## Datos de prueba
 
 Mientras no llegue la exportación de Random ERP, la base trae datos simulados realistas:
@@ -115,7 +131,6 @@ Cuando lleguen los datos reales, reemplazan a los de prueba sin cambiar las pant
 
 | Fase | Módulo | Qué entrega |
 | --- | --- | --- |
-| 5 | Alertas | Avisa antes de un quiebre en productos clave, cuando algo lleva demasiado tiempo parado o cuando la bodega se llena |
 | — | Carga de datos | Subir las exportaciones de Random ERP y el Excel de inventario desde la misma herramienta |
 
 ## Tecnología
