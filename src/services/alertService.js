@@ -2,7 +2,13 @@ import { supabase } from '../lib/supabase'
 import { fetchAll } from './fetchAll'
 
 export async function fetchAlerts() {
-  return fetchAll(() => supabase.from('alerts_overview').select('*').order('id'))
+  return fetchAll(() => supabase.from('alerts_overview').select('*').order('alert_key'))
+}
+
+export async function fetchAlert(alertKey) {
+  const { data, error } = await supabase.from('alerts_overview').select('*').eq('alert_key', alertKey).maybeSingle()
+  if (error) throw error
+  return data
 }
 
 // Alertas críticas y altas sin revisar (para el menú)
@@ -14,12 +20,6 @@ export async function fetchUrgentAlertCount() {
     .eq('reviewed', false)
   if (error) throw error
   return count ?? 0
-}
-
-export async function refreshAlerts() {
-  const { data, error } = await supabase.rpc('refresh_alerts')
-  if (error) throw error
-  return data
 }
 
 export async function reviewAlert(alertKey, note) {

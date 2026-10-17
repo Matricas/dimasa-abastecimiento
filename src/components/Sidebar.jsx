@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { signOut } from '../services/authService'
 import BrandMark from './BrandMark'
 import { useUrgentAlertCount } from '../hooks/useUrgentAlertCount'
+import { roleLabel } from '../lib/roles'
 
 const NAV_ITEMS = [
   { to: '/diagnostico', label: 'Diagnóstico', Icon: Gauge },
@@ -14,8 +15,6 @@ const NAV_ITEMS = [
   { label: 'Datos', Icon: Database },
   { to: '/usuarios', label: 'Usuarios', Icon: Users, roles: ['admin'] },
 ]
-
-const ROLE_LABELS = { admin: 'Administrador', compras: 'Compras', gerencia: 'Gerencia' }
 
 const itemClass = 'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium'
 
@@ -67,7 +66,7 @@ function Sidebar({ onNavigate }) {
           {profile?.full_name || user?.email}
         </p>
         <p className="mt-0.5 font-mono text-xs uppercase tracking-wider text-signal-400">
-          {ROLE_LABELS[profile?.role] ?? '—'}
+          {profile?.role ? roleLabel(profile.role) : '—'}
         </p>
         <button
           type="button"

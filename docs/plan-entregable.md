@@ -8,7 +8,7 @@ Ya existe en `main`: Diagnóstico (0001), Matriz ABC-XYZ (0002 a 0004), Forecast
 
 ## Reglas de convivencia
 
-- **Migraciones:** 0008 y 0009 quedan reservadas para el resto del equipo. Este plan usa desde **0010**.
+- **Migraciones:** 0008 (alertas) y 0012 (candado de recálculo y último admin) las usó el resto del equipo; 0009 sigue reservada. Este plan usa 0010, 0011 y desde **0013**.
 - **Archivos compartidos** (`App.jsx`, `Sidebar.jsx`, servicios existentes): solo se agregan líneas. No se reescriben ni se cambian tablas o funciones de 0001 a 0007.
 - **Ramas:** una por tarea, cada una creada desde la anterior, con PR hacia `main`. Nada se mergea sin aprobación.
 - **Migraciones en Supabase:** se aplican a mano en el SQL Editor, en orden. La base es compartida con producción.
@@ -20,8 +20,8 @@ Ya existe en `main`: Diagnóstico (0001), Matriz ABC-XYZ (0002 a 0004), Forecast
 | 1 | `feature/base-pruebas` | — | Este plan, Vitest y una base Postgres en memoria (PGlite) que aplica las migraciones y prueba RLS | Hecha |
 | 2 | `feature/riesgos-escala` | 0010 | Lecturas paginadas (sin corte en 1.000 filas) y Diagnóstico guardado en tabla | Hecha |
 | 3 | `feature/usuarios` | 0011 | Pantalla de usuarios para asignar roles (solo admin) | Hecha |
-| 4 | `feature/datos` | 0012 | Carga de CSV (proveedores, productos, ventas, stock) con validación e historial | |
-| 5 | `feature/pedidos-en-camino` | 0013 | Carga de pedidos en camino por CSV a `incoming_orders` (0006), lista, recibir y cancelar | |
+| 4 | `feature/datos` | 0013 | Carga de CSV (proveedores, productos, ventas, stock) con validación e historial | |
+| 5 | `feature/pedidos-en-camino` | 0014 | Carga de pedidos en camino por CSV a `incoming_orders` (0006), lista, recibir y cancelar | |
 | — | — | — | ~~Motor y pantalla de propuesta de compra~~ | Ya en `main` (0006, 0007, `/compras`) |
 | — | — | — | ~~Alertas de quiebre, sobrestock, sin movimiento y ocupación~~ | Ya en `main` (0008, `/alertas`); `refresh_inventory_metrics` (0010) también las recalcula |
 | 6 | `feature/entrega` | — | Test de punta a punta (carga → recálculo → propuesta de 0006 → alertas de 0008), manual de uso y revisión de `claude.md` §15 | |

@@ -6,7 +6,6 @@ export async function fetchStockStatus() {
     supabase
       .from('product_stock_status')
       .select('*')
-      .order('excess_value', { ascending: false })
       .order('product_id'),
   )
 }

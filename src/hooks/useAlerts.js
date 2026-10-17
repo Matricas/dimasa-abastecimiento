@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import { fetchAlerts, refreshAlerts, reviewAlert, undoReview } from '../services/alertService'
+import { fetchAlert, fetchAlerts, reviewAlert, undoReview } from '../services/alertService'
+import { refreshInventoryMetrics } from '../services/inventoryService'
 
 export function useAlerts() {
   const [alerts, setAlerts] = useState([])
@@ -23,7 +24,8 @@ export function useAlerts() {
     setRecomputing(true)
     setError(null)
     try {
-      await refreshAlerts()
+      // Recalcula todo (no solo alertas): las alertas leen el diagnóstico guardado, que también hay que poner al día
+      await refreshInventoryMetrics()
       await load()
     } catch (err) {
       setError(err)
@@ -33,15 +35,20 @@ export function useAlerts() {
   }, [load])
 
   // Revisar y deshacer devuelven su error para mostrarlo junto a la alerta
-  const review = useCallback(async (alertKey, note) => {
-    await reviewAlert(alertKey, note)
-    setAlerts(await fetchAlerts())
+  const refreshOne = useCallback(async (alertKey) => {
+    const updated = await fetchAlert(alertKey)
+    setAlerts((prev) => (updated ? prev.map((a) => (a.alert_key === alertKey ? updated : a)) : prev))
   }, [])
 
-  const undo = useCallback(async (reviewId) => {
+  const review = useCallback(async (alertKey, note) => {
+    await reviewAlert(alertKey, note)
+    await refreshOne(alertKey)
+  }, [refreshOne])
+
+  const undo = useCallback(async (reviewId, alertKey) => {
     await undoReview(reviewId)
-    setAlerts(await fetchAlerts())
-  }, [])
+    await refreshOne(alertKey)
+  }, [refreshOne])
 
   useEffect(() => {
     load()

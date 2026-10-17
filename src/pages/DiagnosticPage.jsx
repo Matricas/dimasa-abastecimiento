@@ -1,4 +1,5 @@
 import { RefreshCw } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 import { useInventoryDiagnostic } from '../hooks/useInventoryDiagnostic'
 import { formatDate, formatMillions, formatNumber, formatPercent } from '../lib/format'
 import KpiTile from '../components/KpiTile'
@@ -9,7 +10,9 @@ import StateMessage from '../components/StateMessage'
 import DiagnosticSkeleton from '../components/DiagnosticSkeleton'
 
 function DiagnosticPage() {
-  const { rows, summary, loading, error, reload } = useInventoryDiagnostic()
+  const { rows, summary, loading, recomputing, error, reload, recompute } = useInventoryDiagnostic()
+  const { profile } = useAuth()
+  const canRecompute = ['admin', 'compras'].includes(profile?.role)
 
   return (
     <div className="mx-auto max-w-7xl space-y-6">
@@ -25,12 +28,13 @@ function DiagnosticPage() {
         </div>
         <button
           type="button"
-          onClick={reload}
-          disabled={loading}
+          onClick={canRecompute ? recompute : reload}
+          disabled={loading || recomputing}
+          title={canRecompute ? 'Recalcula diagnóstico, matriz, forecast y alertas con los datos más recientes' : undefined}
           className="inline-flex items-center gap-2 self-start rounded-md border border-concrete-300 bg-white px-4 py-2 text-sm font-medium transition-colors hover:border-graphite-900 disabled:cursor-not-allowed disabled:opacity-60 sm:self-auto"
         >
-          <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
-          Actualizar datos
+          <RefreshCw className={`h-4 w-4 ${loading || recomputing ? 'animate-spin' : ''}`} aria-hidden="true" />
+          {recomputing ? 'Recalculando…' : canRecompute ? 'Recalcular indicadores' : 'Actualizar datos'}
         </button>
       </header>
 

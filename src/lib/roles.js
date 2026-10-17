@@ -8,4 +8,3 @@ export const ROLE_OPTIONS = [
 
 export const roleLabel = (role) => ROLE_OPTIONS.find((r) => r.value === role)?.label ?? role
 
-export const canEdit = (role) => role === 'admin' || role === 'compras'

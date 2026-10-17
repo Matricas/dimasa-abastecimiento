@@ -13,7 +13,7 @@ export async function fetchLatestProposal() {
 }
 
 export async function fetchProposalLines(proposalId) {
-  return fetchAll(() => supabase.from('purchase_proposal_detail').select('*').eq('proposal_id', proposalId).order('id'))
+  return fetchAll(() => supabase.from('purchase_proposal_detail').select('*').eq('proposal_id', proposalId).order('product_id'))
 }
 
 export async function generateProposal() {

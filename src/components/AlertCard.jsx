@@ -70,7 +70,7 @@ function AlertCard({ alert, canReview, currentUserId, onReview, onUndo }) {
           </button>
         )}
         {canReview && alert.reviewed && alert.reviewed_by === currentUserId && (
-          <button type="button" disabled={saving} onClick={() => run(() => onUndo(alert.review_id))} className="inline-flex items-center gap-1.5 rounded-md border border-concrete-300 px-3 py-1.5 text-sm font-medium hover:border-graphite-900 disabled:opacity-60">
+          <button type="button" disabled={saving} onClick={() => run(() => onUndo(alert.review_id, alert.alert_key))} className="inline-flex items-center gap-1.5 rounded-md border border-concrete-300 px-3 py-1.5 text-sm font-medium hover:border-graphite-900 disabled:opacity-60">
             <Undo2 className="h-4 w-4" aria-hidden="true" /> Deshacer revisión
           </button>
         )}
