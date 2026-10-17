@@ -4,7 +4,7 @@ Herramienta web interna para que Dimasa decida **qué, cuánto y cuándo comprar
 
 - **Producción:** https://dimasa-abastecimiento-j4vx.vercel.app
 - **Código:** https://github.com/Matricas/dimasa-abastecimiento
-- **Estado:** Fases 1 a 4 en producción (Diagnóstico, Matriz ABC-XYZ, Forecast y Propuesta de compra). Fase 5 (Alertas) en revisión. Funciona con datos de prueba mientras llegan las exportaciones reales de Random ERP.
+- **Estado:** Fases 1 a 5 en producción: Diagnóstico, Matriz ABC-XYZ, Forecast, Propuesta de compra y Alertas. Funciona con datos de prueba mientras llegan las exportaciones reales de Random ERP.
 
 ---
 
