@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase'
+import { fetchAll } from './fetchAll'
 
 export async function fetchLatestProposal() {
   const { data, error } = await supabase
@@ -12,12 +13,7 @@ export async function fetchLatestProposal() {
 }
 
 export async function fetchProposalLines(proposalId) {
-  const { data, error } = await supabase
-    .from('purchase_proposal_detail')
-    .select('*')
-    .eq('proposal_id', proposalId)
-  if (error) throw error
-  return data
+  return fetchAll(() => supabase.from('purchase_proposal_detail').select('*').eq('proposal_id', proposalId).order('id'))
 }
 
 export async function generateProposal() {

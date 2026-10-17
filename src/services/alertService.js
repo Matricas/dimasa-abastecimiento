@@ -1,9 +1,8 @@
 import { supabase } from '../lib/supabase'
+import { fetchAll } from './fetchAll'
 
 export async function fetchAlerts() {
-  const { data, error } = await supabase.from('alerts_overview').select('*')
-  if (error) throw error
-  return data
+  return fetchAll(() => supabase.from('alerts_overview').select('*').order('id'))
 }
 
 // Alertas críticas y altas sin revisar (para el menú)

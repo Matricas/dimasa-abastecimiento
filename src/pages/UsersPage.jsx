@@ -71,7 +71,7 @@ function UsersPage() {
       {!error && users?.length > 0 && (
         <section className="rounded-lg border border-concrete-300 bg-white" aria-labelledby="users-title">
           <h2 id="users-title" className="border-b border-concrete-200 px-5 py-3 text-sm font-semibold">
-            {formatNumber(users.length)} cuentas
+            {formatNumber(users.length)} {users.length === 1 ? 'cuenta' : 'cuentas'}
             {pendingCount > 0 && <span className="text-graphite-500"> · {formatNumber(pendingCount)} por aprobar</span>}
           </h2>
           <ul className="divide-y divide-concrete-200">

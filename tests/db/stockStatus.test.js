@@ -50,6 +50,7 @@ describe('0010 estado de stock guardado', () => {
     expect(rows[0].r.stock_status).toBe(8)
     expect(rows[0].r.classifications).toBe(8)
     expect(rows[0].r.forecasts).toBe(8)
+    expect(rows[0].r.alerts).toBeNull() // esta base no tiene 0008: se salta sin error
     expect(await status()).not.toBe('quiebre')
   })
 

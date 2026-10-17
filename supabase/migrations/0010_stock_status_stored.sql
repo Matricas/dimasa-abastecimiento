@@ -140,7 +140,7 @@ revoke all on public.product_stock_status from anon;
 grant select on public.product_stock_status to authenticated;
 
 -- ─── Recalcular todo después de cargar datos ─────────────────────────────────
--- Orden: estado de stock → matriz ABC-XYZ → forecast (si existe la migración 0005).
+-- Orden: estado de stock → matriz ABC-XYZ → forecast (0005) → alertas (0008), estas dos si existen.
 
 create or replace function public.refresh_inventory_metrics()
 returns jsonb
@@ -152,6 +152,7 @@ declare
   stock_count integer;
   class_count integer;
   forecast_count integer;
+  alert_count integer;
 begin
   if (select auth.uid()) is not null
      and coalesce(public.current_user_role(), '') not in ('admin', 'compras') then
@@ -164,11 +165,16 @@ begin
   if to_regprocedure('public.refresh_forecasts()') is not null then
     execute 'select public.refresh_forecasts()' into forecast_count;
   end if;
+  -- Las alertas van al final: dependen del estado de stock, la matriz y el forecast
+  if to_regprocedure('public.refresh_alerts()') is not null then
+    execute 'select public.refresh_alerts()' into alert_count;
+  end if;
 
   return jsonb_build_object(
     'stock_status', stock_count,
     'classifications', class_count,
-    'forecasts', forecast_count
+    'forecasts', forecast_count,
+    'alerts', alert_count
   );
 end;
 $$;
