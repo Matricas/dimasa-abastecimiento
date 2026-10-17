@@ -4,7 +4,7 @@ Herramienta web interna para que Dimasa decida **qué, cuánto y cuándo comprar
 
 - **Producción:** https://dimasa-abastecimiento-j4vx.vercel.app
 - **Código:** https://github.com/Matricas/dimasa-abastecimiento
-- **Estado:** Fases 1 a 5 en producción: Diagnóstico, Matriz ABC-XYZ, Forecast, Propuesta de compra y Alertas. Funciona con datos de prueba mientras llegan las exportaciones reales de Random ERP.
+- **Estado:** Fases 1 a 5 en producción (Diagnóstico, Matriz ABC-XYZ, Forecast, Propuesta de compra y Alertas), más gestión de usuarios y pruebas automáticas (`npm test`). Funciona con datos de prueba mientras llegan las exportaciones reales de Random ERP.
 
 ---
 
@@ -21,6 +21,7 @@ Dimasa compra por intuición y lo habitual es que **sobre stock**: capital inmov
   - **Compras:** ve y carga datos.
   - **Gerencia:** solo lectura.
 - Una cuenta nueva no ve nada hasta que el administrador le asigna un rol.
+- **Pantalla de Usuarios** (solo admin): lista las cuentas con su último ingreso y permite asignarles un rol sin entrar a Supabase. Las cuentas se crean o invitan desde el panel de Supabase. El sistema nunca puede quedar sin administrador.
 
 ### Pantalla de Diagnóstico de inventario
 Una foto del inventario con cuatro cifras clave:
@@ -37,6 +38,8 @@ Además incluye:
 - **Dónde está el exceso:** ranking de categorías (fierro, tabiquería, maderas…) según el capital que sobra en cada una.
 - **Tabla de productos:** cada SKU con stock, cobertura en días frente a su objetivo, capital, exceso y estado. Se puede filtrar por estado y zona, buscar por SKU o nombre y ordenar.
 - Funciona en computador, tablet y celular.
+
+Admin y compras tienen el botón **"Recalcular indicadores"**, que pone al día con los datos más recientes el diagnóstico, la matriz, el forecast y las alertas, en menos de un segundo con los datos de prueba. Si dos personas lo presionan a la vez, la segunda espera a que termine la primera.
 
 ### Cómo calcula
 - **Cobertura:** días que alcanza el stock al ritmo de venta de los últimos 90 días.
