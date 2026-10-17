@@ -315,6 +315,11 @@ begin
   if to_regprocedure('public.refresh_forecasts()') is not null then
     perform public.refresh_forecasts();
   end if;
+  -- Diagnóstico guardado (0010)
+  if to_regprocedure('public.refresh_stock_status()') is not null then
+    perform public.refresh_stock_status();
+  end if;
+
   if to_regprocedure('public.generate_purchase_proposal()') is not null then
     perform public.generate_purchase_proposal();
   end if;

@@ -1,9 +1,8 @@
 import { supabase } from '../lib/supabase'
+import { fetchAll } from './fetchAll'
 
 export async function fetchAbcXyz() {
-  const { data, error } = await supabase.from('product_abc_xyz').select('*')
-  if (error) throw error
-  return data
+  return fetchAll(() => supabase.from('product_abc_xyz').select('*').order('product_id'))
 }
 
 export async function fetchPolicies() {

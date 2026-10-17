@@ -7,6 +7,8 @@ import MatrixPage from './pages/MatrixPage'
 import ForecastPage from './pages/ForecastPage'
 import PurchasePage from './pages/PurchasePage'
 import AlertsPage from './pages/AlertsPage'
+import RoleRoute from './components/RoleRoute'
+import UsersPage from './pages/UsersPage'
 
 function App() {
   return (
@@ -19,6 +21,9 @@ function App() {
           <Route path="/forecast" element={<ForecastPage />} />
           <Route path="/compras" element={<PurchasePage />} />
           <Route path="/alertas" element={<AlertsPage />} />
+          <Route element={<RoleRoute roles={['admin']} />}>
+            <Route path="/usuarios" element={<UsersPage />} />
+          </Route>
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/diagnostico" replace />} />
